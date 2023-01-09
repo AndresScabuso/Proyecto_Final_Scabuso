@@ -1,0 +1,18 @@
+<div class="card" style="width: 25rem;">
+    <div class="card-body">
+      <span appCabecera class="card-title">Datos de {{ data!.name }}</span>
+      <div class="card-text">
+        <div class="row" style="margin-top: 20px">
+          <div class="col-md-6"><b>Nombre</b></div>
+          <div class="col-md-6">{{ data?.name }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-6"><b>Apellido</b></div>
+          <div class="col-md-6">{{ data?.description }}</div>
+        </div>           
+        <div class="row">
+          <div class="col-md-6"><b>Activo</b></div>
+          <div class="col-md-6">{{ data?.isActive! | activo }}</div>
+        </div>      
+      </div> 
+  </div>

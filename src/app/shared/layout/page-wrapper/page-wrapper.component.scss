@@ -1,0 +1,40 @@
+mat-sidenav {
+    width: 200px;
+    border-right: none;
+    background: rgb(32, 32, 32);
+    color: white;
+    padding: 16px 0px;
+    text-align: center;
+    font-size: large;
+}
+
+mat-sidenav-container {
+    height: calc(100vh - 65px);
+}
+
+mat-sidenav-content {
+    background-color: rgb(250, 250, 250);
+}
+
+.item {
+    width: 100%;
+    display: block;
+    padding: 8px 16px;
+    text-align: left;
+    border: none;
+    white-space: normal;
+    float: none;
+    outline: 0;
+    color: white;
+    text-decoration: none;
+}
+
+.item:hover {
+    background-color: #3387e6;
+    color: white;
+}
+
+.active {
+    background-color: #626263;
+    color: white;
+}

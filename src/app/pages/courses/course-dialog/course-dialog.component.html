@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>Curso</h1>
+<div mat-dialog-content>
+    <form class="flex flex-column" [formGroup]="courseForm">
+        <mat-form-field appearance="outline" style="margin-top: 20px;">
+            <mat-label>Nombre</mat-label>
+            <input [formControl]="nameControl" matInput placeholder="Nombre">
+            <mat-error *ngIf="courseForm.get('name')?.errors?.['required']">El campo Nombre es requerido</mat-error>
+            <mat-error *ngIf="courseForm.get('name')?.errors?.['minlength']">El campo Nombre debe tener al menos 3 caracteres</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Descripción</mat-label>
+            <input [formControl]="descriptionControl" matInput placeholder="Descripción">
+            <mat-error *ngIf="courseForm.get('description')?.errors?.['required']">El campo Descripción es requerido</mat-error>
+            <mat-error *ngIf="courseForm.get('description')?.errors?.['minlength']">El campo Descripción debe tener al menos 3 caracteres</mat-error>        
+        </mat-form-field>
+        <mat-slide-toggle [formControl]="isActiveControl">Activo</mat-slide-toggle>
+    </form>
+    <div mat-dialog-action style="margin-top: 50px;">
+        <button type="button" class="btn btn-light" (click)="close()">Cancelar</button> &nbsp;
+        <button type="button" class="btn btn-primary" [mat-dialog-close]="courseForm.value" [ngClass]="courseValid() ? 'btn btn-primary' : 'btn btn-primary disabled'">Grabar</button>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Alumno</h1>
+<div mat-dialog-content>
+    <form class="flex flex-column" [formGroup]="studentForm">
+        <mat-form-field appearance="outline" style="margin-top: 20px;">
+            <mat-label>Nombre</mat-label>
+            <input [formControl]="firstNameControl" matInput placeholder="Nombre">
+            <mat-error *ngIf="studentForm.get('firstName')?.errors?.['required']">El campo Nombre es requerido</mat-error>
+            <mat-error *ngIf="studentForm.get('firstName')?.errors?.['minlength']">El campo Nombre debe tener al menos 3 caracteres</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input [formControl]="lastNameControl" matInput placeholder="Apellido">
+            <mat-error *ngIf="studentForm.get('lastName')?.errors?.['required']">El campo Apellido es requerido</mat-error>
+            <mat-error *ngIf="studentForm.get('lastName')?.errors?.['minlength']">El campo Apellido debe tener al menos 3 caracteres</mat-error>        
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>E-Mail</mat-label>
+            <input [formControl]="emailControl" matInput placeholder="E-Mail">
+            <mat-error *ngIf="studentForm.get('email')?.errors?.['required']">El campo E-Mail es requerido</mat-error>
+            <mat-error *ngIf="studentForm.get('email')?.errors?.['email']">El campo E-Mail tiene un formato invalido</mat-error>           
+        </mat-form-field>
+        <mat-slide-toggle [formControl]="isActiveControl">Activo</mat-slide-toggle>
+    </form>
+    <div mat-dialog-action style="margin-top: 50px;">
+        <button type="button" class="btn btn-light" (click)="close()">Cancelar</button> &nbsp;
+        <button type="button" class="btn btn-primary" [mat-dialog-close]="studentForm.value" [ngClass]="studentValid() ? 'btn btn-primary' : 'btn btn-primary disabled'">Grabar</button>
+    </div>
+</div>

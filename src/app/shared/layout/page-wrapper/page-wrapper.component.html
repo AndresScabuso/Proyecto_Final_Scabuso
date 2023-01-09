@@ -1,0 +1,11 @@
+<mat-sidenav-container >
+    <mat-sidenav mode="side" opened>
+        <a class="item">Inicio</a>
+        <a class="item" routerLink="/students">Alumnos</a>
+        <a class="item" routerLink="/courses">Cursos</a>
+        <a class="item">Inscripciones</a>
+    </mat-sidenav>
+    <mat-sidenav-content>        
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>
