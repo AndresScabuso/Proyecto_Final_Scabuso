@@ -9,7 +9,6 @@ import { CourseDetailsComponent } from './course-details/course-details.componen
 import { CourseDialogComponent } from './course-dialog/course-dialog.component';
 
 
-
 @NgModule({
   declarations: [
     CoursesComponent,

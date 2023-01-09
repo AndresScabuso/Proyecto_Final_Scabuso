@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Course } from 'src/app/models/course';
+import { CourseService } from 'src/app/services/course/course.service';
 import { CourseDetailsComponent } from './course-details/course-details.component';
 import { CourseDialogComponent } from './course-dialog/course-dialog.component';
 
@@ -10,24 +11,35 @@ import { CourseDialogComponent } from './course-dialog/course-dialog.component';
   styleUrls: ['./courses.component.scss']
 })
 export class CoursesComponent {
-  // Cursos precargados
-  courses : Course[] = [
-    new Course(1, 'Programacion I', 'Html, CSS, Javascript', true),
-    new Course(2, 'Base de Datos I', 'Fundamentos de base de datos', true)
-  ]
+  // Curso
+  courses: Course[];
 
   // Columnas que se van a mostrar en la tabla
-  displayedColumns = ['id', 'details', 'name', 'description','isActive', 'edit', 'delete'];
+  displayedColumns = ['id', 'details', 'name', 'description', 'isActive', 'edit', 'delete'];
 
-  constructor(private readonly dialogService: MatDialog) {}
+  constructor(private readonly dialogService: MatDialog, public service: CourseService) { }
+
+  ngOnInit(): void {
+    this.service.getAll().subscribe(response => {
+      this.courses = response;
+    });
+  }
+
+  getAllCourses() {
+    this.service.getAll().subscribe(res => {
+      this.courses = res;
+    })
+  }
 
   // Agrega un curso
   addCourse() {
     const dialog = this.dialogService.open(CourseDialogComponent, { width: '60%' });
     dialog.afterClosed().subscribe((value) => {
       if (value) {
-        const lastId = this.courses[this.courses.length -1]?.id;
-        this.courses = [...this.courses, new Course(lastId+1, value.name, value.description, value.isActive)];
+        this.service.add(value).subscribe(response => {
+          console.log(response);
+          this.getAllCourses();
+        });
       }
     })
   }
@@ -35,16 +47,22 @@ export class CoursesComponent {
   // Modifica un curso
   editCourse(course: Course) {
     const dialog = this.dialogService.open(CourseDialogComponent, { data: course, width: '60%' });
-    dialog.afterClosed().subscribe((data) => {
-      if (data) {
-        this.courses = this.courses.map((cou) => cou.id === course.id ? { ...cou, ...data } : cou);
+    dialog.afterClosed().subscribe((value) => {
+      if (value) {
+        this.service.update(value, course.id).subscribe(response => {
+          console.log(response);
+          this.getAllCourses();
+        });
       }
     })
   }
 
   // Elimina un curso
   removeCourse(course: Course) {
-    this.courses = this.courses.filter((cou) => cou.id !== course.id);
+    this.service.delete(course.id).subscribe(response => {
+      console.log(response);
+      this.getAllCourses();
+    });
   }
 
   details(course: Course) {
