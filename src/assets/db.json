@@ -1,0 +1,11 @@
+{
+    "students": [
+        {
+            "id": 1,
+            "firstName": "Andres",
+            "lastName": "Scabuso",
+            "email": "andresscabuso@gmail.com",
+            "isActive": true
+        } 
+    ] 
+}

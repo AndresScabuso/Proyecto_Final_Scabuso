@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 import { Student } from 'src/app/models/student';
+import { StudentService } from 'src/app/services/student/student.service';
 import { StudentDetailsComponent } from './student-details/student-details.component';
 import { StudentDialogComponent } from './student-dialog/student-dialog.component';
 
@@ -9,27 +11,36 @@ import { StudentDialogComponent } from './student-dialog/student-dialog.componen
   templateUrl: './students.component.html',
   styleUrls: ['./students.component.scss']
 })
-export class StudentsComponent {
-  // Estudiante precargados
-  students : Student[] = [
-    new Student(1, 'Lionel', 'Messi', 'lmessi@gmail.com', true),
-    new Student(2, 'Angel', 'Di Maria', 'adimaria@gmail.com', true),
-    new Student(3, 'Lautaro', 'Martinez', 'lmartinez@gmail.com', false),
-    new Student(4, 'Emiliano', 'Martinez', 'emartinez@gmail.com', true),
-  ]
+export class StudentsComponent implements OnInit {
+  // Estudiante
+  students: Student[];
 
   // Columnas que se van a mostrar en la tabla
   displayedColumns = ['id', 'details', 'firstName', 'lastName', 'email', 'isActive', 'edit', 'delete'];
 
-  constructor(private readonly dialogService: MatDialog) {}
+  constructor(private readonly dialogService: MatDialog, public service: StudentService) { }
+
+  ngOnInit(): void {
+    this.service.getAll().subscribe(response => {
+      this.students = response;
+    });
+  }
+
+  getAllStudents() {
+    this.service.getAll().subscribe(res => {
+      this.students = res;
+    })
+  }
 
   // Agrega un estudiante
   addStudent() {
     const dialog = this.dialogService.open(StudentDialogComponent, { width: '60%' });
     dialog.afterClosed().subscribe((value) => {
       if (value) {
-        const lastId = this.students[this.students.length -1]?.id;
-        this.students = [...this.students, new Student(lastId+1, value.firstName, value.lastName, value.email, value.isActive)];
+        this.service.add(value).subscribe(response => {
+          console.log(response);
+          this.getAllStudents();
+        });
       }
     })
   }
@@ -37,16 +48,22 @@ export class StudentsComponent {
   // Modifica un estudiante
   editStudent(student: Student) {
     const dialog = this.dialogService.open(StudentDialogComponent, { data: student, width: '60%' });
-    dialog.afterClosed().subscribe((data) => {
-      if (data) {
-        this.students = this.students.map((stu) => stu.id === student.id ? { ...stu, ...data } : stu);
+    dialog.afterClosed().subscribe((value) => {
+      if (value) {
+        this.service.update(value, student.id).subscribe(response => {
+          console.log(response);
+          this.getAllStudents();
+        });
       }
     })
   }
 
   // Elimina un estudiante
   removeStudent(student: Student) {
-    this.students = this.students.filter((stu) => stu.id !== student.id);
+    this.service.delete(student.id).subscribe(response => {
+      console.log(response);
+      this.getAllStudents();
+    });
   }
 
   details(student: Student) {

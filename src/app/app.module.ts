@@ -9,6 +9,7 @@ import { PageWrapperComponent } from './shared/layout/page-wrapper/page-wrapper.
 import { StudentsModule } from './pages/students/students.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CoursesModule } from './pages/courses/courses.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { CoursesModule } from './pages/courses/courses.module';
         SharedModule,
         StudentsModule,
         CoursesModule,
-        NgbModule
+        NgbModule,
+        HttpClientModule
     ]
 })
 export class AppModule { }

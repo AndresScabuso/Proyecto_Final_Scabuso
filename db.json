@@ -1,0 +1,18 @@
+{
+  "students": [
+    {
+      "firstName": "Andres",
+      "lastName": "Scabuso",
+      "email": "andresscabuso@gmail.com",
+      "isActive": false,
+      "id": 1
+    },
+    {
+      "firstName": "Juan",
+      "lastName": "Perez",
+      "email": "jperez@gmail.com",
+      "isActive": true,
+      "id": 2
+    }
+  ]
+}
