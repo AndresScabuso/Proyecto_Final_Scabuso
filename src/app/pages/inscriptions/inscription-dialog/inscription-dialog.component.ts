@@ -17,8 +17,8 @@ export class InscriptionDialogComponent implements OnInit {
   students$: Observable<Student[]>;
   courses$: Observable<Course[]>;
 
-  studentControl = new FormControl(new Student(1,'','','',true), Validators.required)
-  courseControl = new FormControl(new Course(1,'','',true), Validators.required)
+  studentControl = new FormControl<Student | null>(null, Validators.required)
+  courseControl = new FormControl<Course | null>(null, Validators.required)
   isActiveControl = new FormControl(true)
 
   inscriptionForm = new FormGroup({

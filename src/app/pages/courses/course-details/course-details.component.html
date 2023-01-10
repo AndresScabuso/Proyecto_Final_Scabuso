@@ -1,50 +1,54 @@
-<div class="card" style="width: 800px; padding: 20px">
-  <div class="card-body">
-    <span class="card-title">Datos de {{ data.name }}</span>
-    <div class="card-text">
-      <div class="row" style="margin-top: 20px">
-        <div class="col-md-6"><b>Nombre</b></div>
-        <div class="col-md-6">{{ data.name }}</div>
-      </div>
-      <div class="row">
-        <div class="col-md-6"><b>Apellido</b></div>
-        <div class="col-md-6">{{ data.description }}</div>
-      </div>
-      <div class="row">
-        <div class="col-md-6"><b>Activo</b></div>
-        <div class="col-md-6">{{ data.isActive! | activo }}</div>
-      </div>
+<mat-card style="width: 800px; margin: 20px;">
+  <mat-card-header>
+    <mat-card-title appCabecera>Detalles de {{ data.name }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="row" style="margin-top: 20px">
+      <div class="col-md-6"><b>Nombre del curso</b></div>
+      <div class="col-md-6">{{ data.name }}</div>
     </div>
-  </div>
-  <label>Inscripciones del alumno</label>
-  <table mat-table [dataSource]="inscriptions$" class="mat-elevation-z8">
+    <div class="row">
+      <div class="col-md-6"><b>Descripción</b></div>
+      <div class="col-md-6">{{ data.description }}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"><b>Activo</b></div>
+      <div class="col-md-6">{{ data.isActive! | activo }}</div>
+    </div>
+    <br>
 
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> No. </th>
-      <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
-    </ng-container>
+    <mat-card-title>Alumnos inscriptos en el curso</mat-card-title>
 
-    <ng-container matColumnDef="student">
-      <th mat-header-cell *matHeaderCellDef> Alumno </th>
-      <td mat-cell *matCellDef="let element"> {{ element.student.firstName + ' ' + element.student.lastName }} </td>
-    </ng-container>
+    <table mat-table [dataSource]="inscriptions$" class="mat-elevation-z8">
 
-    <ng-container matColumnDef="isActive">
-      <th mat-header-cell *matHeaderCellDef> Activo </th>
-      <td mat-cell *matCellDef="let element"><mat-icon [ngClass]="element.isActive ? 'green' : 'red'">circle</mat-icon>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> No. </th>
+        <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef> Eliminar </th>
-      <td mat-cell *matCellDef="let element">
-        <button (click)="removeInscription(element)" mat-icon-button color="warn">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="student">
+        <th mat-header-cell *matHeaderCellDef> Alumno </th>
+        <td mat-cell *matCellDef="let element"> {{ element.student.firstName + ' ' + element.student.lastName }} </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
+      <ng-container matColumnDef="isActive">
+        <th mat-header-cell *matHeaderCellDef> Activo </th>
+        <td mat-cell *matCellDef="let element"><mat-icon
+            [ngClass]="element.isActive ? 'green' : 'red'">circle</mat-icon>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef> Eliminar </th>
+        <td mat-cell *matCellDef="let element">
+          <button (click)="removeInscription(element)" mat-icon-button color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

@@ -28,7 +28,10 @@ export class InscriptionsComponent {
     const dialog = this.dialogService.open(InscriptionDialogComponent, { width: '60%' });
     dialog.afterClosed().subscribe((value) => {
       if (value) {
-        this.service.add(value);
+        if(!this.checkExists(value, true))
+          this.service.add(value);
+        else
+          alert("El alumno ya se encuentra inscripto al curso seleccionado"); // Implementar SnackBar de material!!!
       }
     })
   }
@@ -38,14 +41,20 @@ export class InscriptionsComponent {
     const dialog = this.dialogService.open(InscriptionDialogComponent, { data: inscription, width: '60%' });
     dialog.afterClosed().subscribe((value) => {
       if (value) {
-        this.service.update(value, inscription.id);
+        if(!this.checkExists(value, false))
+          this.service.update(value, inscription.id);
+        else
+          alert("El alumno ya se encuentra inscripto al curso seleccionado"); // Implementar SnackBar de material!!!
       }
     })
   }
 
   // Elimina una inscripcion
   removeInscription(inscription: Inscription) {
-    console.log(inscription)
     this.service.delete(inscription.id);
+  }
+
+  checkExists(inscription: Inscription, newItem: boolean) {
+    return this.service.checkExists(inscription.id, inscription.student.id, inscription.course.id, newItem);
   }
 }

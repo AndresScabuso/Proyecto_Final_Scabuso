@@ -12,13 +12,17 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivoPipe } from './pipes/activo.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { NotImageDirective } from './directives/not-image.directive';
+import { CabeceraDirective } from './directives/cabecera.directive';
 
 @NgModule({
   declarations: [
-    ActivoPipe
+    ActivoPipe,
+    NotImageDirective,
+    CabeceraDirective
   ],
   imports: [
     CommonModule
@@ -36,7 +40,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatSelectModule,
     MatAutocompleteModule,
     MatSlideToggleModule,
+    MatSnackBarModule,
     ActivoPipe,
+    NotImageDirective,
+    CabeceraDirective,
     ReactiveFormsModule,
     FormsModule
   ]

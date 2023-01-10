@@ -21,7 +21,7 @@ export class StudentService implements ICrudService<Student> {
 
   add(item: Student) {
     let studentsAux = this.studentsData.getValue();
-    item.id = studentsAux[studentsAux.length - 1].id + 1;
+    item.id = studentsAux.length > 0 ? (studentsAux[studentsAux.length - 1].id + 1) : 1;
     studentsAux.push(item);
     this.studentsData.next(studentsAux.sort(s => s.id));
   }

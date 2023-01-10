@@ -21,7 +21,7 @@ export class CoursesService implements ICrudService<Course>{
 
   add(item: Course): void {
     let coursesAux = this.coursesData.getValue();
-    item.id = coursesAux[coursesAux.length - 1].id + 1;
+    item.id = coursesAux.length > 0 ? (coursesAux[coursesAux.length - 1].id + 1) : 1;
     coursesAux.push(item);
     this.coursesData.next(coursesAux.sort(s => s.id));
   }

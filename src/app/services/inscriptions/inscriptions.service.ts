@@ -17,15 +17,14 @@ export class InscriptionsService implements ICrudService<Inscription>{
   }
 
   add(item: Inscription): void {
-    console.log(item)
     let inscriptionsAux = this.inscriptionsData.getValue();
-    item.id = inscriptionsAux[inscriptionsAux.length - 1].id + 1;
+    item.id = inscriptionsAux.length > 0 ? (inscriptionsAux[inscriptionsAux.length - 1].id + 1) : 1;
     inscriptionsAux.push(item);
     this.inscriptionsData.next(inscriptionsAux.sort(s => s.id));
   }
 
   update(item: Inscription, id: number): void {
-    let inscriptionsAux = this.inscriptionsData.getValue().filter(p => p.id == id);
+    let inscriptionsAux = this.inscriptionsData.getValue().filter(p => p.id != id);
     item.id = id;
     inscriptionsAux.push(item);
     this.inscriptionsData.next(inscriptionsAux);
@@ -42,6 +41,16 @@ export class InscriptionsService implements ICrudService<Inscription>{
 
   getByCourseId(id: number): Inscription[] {
     return this.inscriptionsData.getValue().filter(p => p.course.id == id);
+  }
+
+  checkExists(id: number, studentId: number, courseId: number, newItem: boolean): boolean {
+    let inscriptionsAux = this.inscriptionsData.getValue();
+    if(newItem)
+      inscriptionsAux = inscriptionsAux.filter(p => p.student.id == studentId && p.course.id == courseId);
+    else
+      inscriptionsAux = inscriptionsAux.filter(p => p.student.id == studentId && p.course.id == courseId && p.id != id);
+    console.log(inscriptionsAux)
+    return inscriptionsAux.length > 0;
   }
 
 }
