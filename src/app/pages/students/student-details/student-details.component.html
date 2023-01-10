@@ -1,22 +1,54 @@
-<div class="card" style="width: 25rem;">
-    <div class="card-body">
-      <span appCabecera class="card-title">Datos de {{ data!.firstName + ' ' + data!.lastName }}</span>
-      <div class="card-text">
-        <div class="row" style="margin-top: 20px">
-          <div class="col-md-6"><b>Nombre</b></div>
-          <div class="col-md-6">{{ data?.firstName }}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-6"><b>Apellido</b></div>
-          <div class="col-md-6">{{ data?.lastName }}</div>
-        </div>        
-        <div class="row">
-          <div class="col-md-6"><b>Email</b></div>
-          <div class="col-md-6">{{ data?.email }}</div>
-        </div>        
-        <div class="row">
-          <div class="col-md-6"><b>Activo</b></div>
-          <div class="col-md-6">{{ data?.isActive! | activo }}</div>
-        </div>      
-      </div> 
+<div class="card" style="width: 800px; padding: 20px">
+  <div class="card-body">
+    <span appCabecera class="card-title">Datos de {{ data!.firstName + ' ' + data!.lastName }}</span>
+    <div class="card-text">
+      <div class="row" style="margin-top: 20px">
+        <div class="col-md-6"><b>Nombre</b></div>
+        <div class="col-md-6">{{ data.firstName }}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6"><b>Apellido</b></div>
+        <div class="col-md-6">{{ data.lastName }}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6"><b>Email</b></div>
+        <div class="col-md-6">{{ data.email }}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6"><b>Activo</b></div>
+        <div class="col-md-6">{{ data.isActive! | activo }}</div>
+      </div>
+    </div>
   </div>
+  <label>Inscripciones del alumno</label>
+  <table mat-table [dataSource]="inscriptions$" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="course">
+      <th mat-header-cell *matHeaderCellDef> Curso </th>
+      <td mat-cell *matCellDef="let element"> {{ element.course.name }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isActive">
+      <th mat-header-cell *matHeaderCellDef> Activo </th>
+      <td mat-cell *matCellDef="let element"><mat-icon [ngClass]="element.isActive ? 'green' : 'red'">circle</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> Eliminar </th>
+      <td mat-cell *matCellDef="let element">
+        <button (click)="removeInscription(element)" mat-icon-button color="warn">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

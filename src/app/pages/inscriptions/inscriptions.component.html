@@ -1,33 +1,24 @@
 <div class="container">
     <div class="row">
-        <div appCabecera class="col-auto mr-auto">Lista de cursos</div>
-        <div class="col-auto"><button type="button" class="btn btn-primary" (click)="addCourse()"> Nuevo</button></div>
+        <div class="col-auto mr-auto">Inscripciones</div>
+        <div class="col-auto"><button type="button" class="btn btn-primary" (click)="addInscription()"> Nuevo</button></div>
       </div>
     <br><br>
-    <table mat-table [dataSource]="courses$" class="mat-elevation-z8">
+    <table mat-table [dataSource]="inscriptions$" class="mat-elevation-z8">
 
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef> No. </th>
             <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
         </ng-container>
 
-        <ng-container matColumnDef="details">
-            <th mat-header-cell *matHeaderCellDef> Ver </th>
-            <td mat-cell *matCellDef="let element">
-                <button (click)="details(element)" mat-icon-button >
-                    <mat-icon>info</mat-icon>
-                </button>
-            </td>
+        <ng-container matColumnDef="student">
+            <th mat-header-cell *matHeaderCellDef> Alumno </th>
+            <td mat-cell *matCellDef="let element"> {{ element.student.firstName + ' ' + element.student.lastName }} </td>
         </ng-container>
 
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Nombre </th>
-            <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef> Descripción </th>
-            <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
+        <ng-container matColumnDef="course">
+            <th mat-header-cell *matHeaderCellDef> Curso </th>
+            <td mat-cell *matCellDef="let element"> {{ element.course.name }} </td>
         </ng-container>
 
         <ng-container matColumnDef="isActive">
@@ -38,7 +29,7 @@
         <ng-container matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef> Editar </th>
             <td mat-cell *matCellDef="let element">
-                <button (click)="editCourse(element)" mat-icon-button color="primary">
+                <button (click)="editInscription(element)" mat-icon-button color="primary">
                     <mat-icon>edit</mat-icon>
                 </button>
             </td>
@@ -47,7 +38,7 @@
         <ng-container matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef> Eliminar </th>
             <td mat-cell *matCellDef="let element">
-                <button (click)="removeCourse(element)" mat-icon-button color="warn">
+                <button (click)="removeInscription(element)" mat-icon-button color="warn">
                     <mat-icon>delete</mat-icon>
                 </button>
             </td>

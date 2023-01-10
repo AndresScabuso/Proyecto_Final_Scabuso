@@ -2,9 +2,9 @@
     <div class="row">
         <div appCabecera class="col-auto mr-auto">Lista de alumnos</div>
         <div class="col-auto"><button type="button" class="btn btn-primary" (click)="addStudent()"> Nuevo</button></div>
-      </div>
+    </div>
     <br><br>
-    <table mat-table [dataSource]="students" class="mat-elevation-z8">
+    <table mat-table [dataSource]="students$" class="mat-elevation-z8">
 
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef> No. </th>

@@ -1,18 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivoPipe } from './activo.pipe';
+import { HomeComponent } from './home.component';
 
 
 
 @NgModule({
   declarations: [
-    ActivoPipe
+    HomeComponent
   ],
   imports: [
     CommonModule
-  ],
-  exports: [
-    ActivoPipe
   ]
 })
-export class PipesModule { }
+export class HomeModule { }

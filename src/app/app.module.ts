@@ -4,19 +4,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToolbarComponent } from './shared/layout/toolbar/toolbar.component';
-import { PageWrapperComponent } from './shared/layout/page-wrapper/page-wrapper.component';
-import { StudentsModule } from './pages/students/students.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CoursesModule } from './pages/courses/courses.module';
 import { HttpClientModule } from '@angular/common/http';
+import { CoreModule } from './core/core.module';
+import { StudentsModule } from './pages/students/students.module';
+import { CoursesModule } from './pages/courses/courses.module';
+import { InscriptionsModule } from './pages/inscriptions/inscriptions.module';
 
 
 @NgModule({
     declarations: [
-        AppComponent,
-        ToolbarComponent,
-        PageWrapperComponent
+        AppComponent
     ],
     providers: [],
     bootstrap: [AppComponent],
@@ -25,10 +23,12 @@ import { HttpClientModule } from '@angular/common/http';
         AppRoutingModule,
         BrowserAnimationsModule,
         SharedModule,
+        NgbModule,
+        HttpClientModule,
+        CoreModule,
         StudentsModule,
         CoursesModule,
-        NgbModule,
-        HttpClientModule
+        InscriptionsModule
     ]
 })
 export class AppModule { }

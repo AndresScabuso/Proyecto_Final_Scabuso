@@ -1,33 +1,40 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Student } from 'src/app/models/student';
-import { ICrudService } from '../ICrudService';
+import { ICrudService } from '../interfaces/ICrudService';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService implements ICrudService<Student> {
 
-  url: string;
+  public studentsData$: Observable<Student[]>;
+  private studentsData = new BehaviorSubject<Student[]>([]);
 
-  constructor(private httpClient: HttpClient) {
-    this.url = "http://localhost:3000/students";
-  }
-  
-  getAll(): Observable<Student[]> {
-    return this.httpClient.get<Student[]>(this.url).pipe(map((res:Student[]) => { return res }))
+  constructor() {
+    this.studentsData$ = this.studentsData.asObservable();
+    this.studentsData.next([
+         new Student(1, 'Lionel', 'Messi', 'lmessi@gmail.com', true),
+         new Student(2, 'Angel', 'Di Maria', 'adimaria@gmail.com', true)
+        ]);
   }
 
   add(item: Student) {
-    return this.httpClient.post(this.url, item).pipe(map((res:any) => { return res }))
+    let studentsAux = this.studentsData.getValue();
+    item.id = studentsAux[studentsAux.length - 1].id + 1;
+    studentsAux.push(item);
+    this.studentsData.next(studentsAux.sort(s => s.id));
   }
 
-  update(item: Student, id:number) {
-    return this.httpClient.put(this.url + '/' + id , item).pipe(map((res:any) => { return res }))
+  update(item: Student, id: number) {
+    let studentsAux = this.studentsData.getValue().filter(p => p.id !== id);
+    item.id = id;
+    studentsAux.push(item);
+    this.studentsData.next(studentsAux);
   }
 
   delete(id: number) {
-    return this.httpClient.delete(this.url + '/' + id).pipe(map((res:any) => { return res }))
+    let studentsAux = this.studentsData.getValue().filter(p => p.id !== id);
+    this.studentsData.next(studentsAux);
   }
 }
