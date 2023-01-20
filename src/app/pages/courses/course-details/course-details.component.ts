@@ -13,25 +13,26 @@ import { InscriptionsService } from 'src/app/services/inscriptions/inscriptions.
 
 export class CourseDetailsComponent implements OnInit {
   
-  public inscriptions$: Observable<Inscription[]>;
+  public inscriptions: Inscription[];
 
   // Columnas que se van a mostrar en la tabla
-  displayedColumns = ['id', 'student', 'isActive', 'delete'];
+  displayedColumns = ['student', 'isActive', 'delete'];
 
-  courseId: number;
+  courseId: string;
 
-  constructor(public service: InscriptionsService, private readonly dialogRef: MatDialogRef<CourseDetailsComponent>, @Inject(MAT_DIALOG_DATA) public data: Course) {
+  constructor(private service: InscriptionsService, private readonly dialogRef: MatDialogRef<CourseDetailsComponent>, @Inject(MAT_DIALOG_DATA) public data: Course) {
     this.courseId = data.id
   }
   
   
   ngOnInit(): void {
-    this.inscriptions$ = of(this.service.getByCourseId(this.courseId));
+     this.service.getInscriptionByCourseId(this.courseId).subscribe((inscriptions) => {
+      this.inscriptions = inscriptions;
+     })
   }
 
   // Elimina un inscripcion
   removeInscription(inscription: Inscription) {
-    this.service.delete(inscription.id);
-    this.inscriptions$ = of(this.service.getByCourseId(this.courseId));
+    this.service.deleteInscriptionsById(inscription.id);
   }
 }

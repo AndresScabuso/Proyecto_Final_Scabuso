@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { Course } from 'src/app/models/course';
 import { CoursesService } from 'src/app/services/courses/courses.service';
 import { CourseDetailsComponent } from './course-details/course-details.component';
@@ -13,43 +13,54 @@ import { CourseDialogComponent } from './course-dialog/course-dialog.component';
 })
 export class CoursesComponent {
   // Cursos
-  public courses$: Observable<Course[]>;
+  public courses: Course[];
 
   // Columnas que se van a mostrar en la tabla
-  displayedColumns = ['id', 'details', 'name', 'description','isActive', 'edit', 'delete'];
+  displayedColumns = ['id', 'details', 'name', 'description', 'isActive'];
 
-  constructor(private readonly dialogService: MatDialog, public service: CoursesService) {}
-
-  ngOnInit(): void {
-    this.courses$ = this.service.coursesData$;
+  constructor(private readonly dialogService: MatDialog, public service: CoursesService, private authService: AuthService) {
+    if(this.isAdmin()) {
+      this.displayedColumns.push('edit');
+      this.displayedColumns.push('delete');
+    }  
   }
 
-  // Agrega un curso
+  ngOnInit(): void {
+    this.service.getCourses().subscribe((courses) => {
+      this.courses = courses;
+    }); 
+  }
+
+  // Agrega un alumno
   addCourse() {
     const dialog = this.dialogService.open(CourseDialogComponent, { width: '60%' });
     dialog.afterClosed().subscribe((value) => {
       if (value) {
-        this.service.add(value);
+        this.service.saveCourse(value);
       }
     })
   }
-
-  // Modifica un curso
+  
+  // Modifica un alumno
   editCourse(course: Course) {
     const dialog = this.dialogService.open(CourseDialogComponent, { data: course, width: '60%' });
     dialog.afterClosed().subscribe((value) => {
       if (value) {
-        this.service.update(value, course.id);
+        this.service.updateCourse(value, course.id);
       }
     })
   }
 
-  // Elimina un curso
+  // Elimina un alumno
   removeCourse(course: Course) {
-    this.service.delete(course.id);
+    this.service.deleteCoursesById(course.id);
   }
 
   details(course: Course) {
     this.dialogService.open(CourseDetailsComponent, { data: course });
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 }

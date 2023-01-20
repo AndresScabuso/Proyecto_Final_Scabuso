@@ -94,10 +94,20 @@
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/purple-green.css",
+              "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.scss"
             ],
             "scripts": []
+          }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "Proyecto_Final_Scabuso:build:production",
+            "firebaseProject": "proyectofinalscabuso",
+            "firebaseHostingSite": "proyectofinalscabuso"
           }
         }
       }

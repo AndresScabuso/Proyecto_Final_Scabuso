@@ -1,40 +1,41 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, updateDoc } from '@angular/fire/firestore';
+import { Observable, of } from 'rxjs';
 import { Student } from 'src/app/models/student';
-import { ICrudService } from '../interfaces/ICrudService';
 
 @Injectable({
   providedIn: 'root'
 })
-export class StudentService implements ICrudService<Student> {
+export class StudentService {
+  constructor(private firestore: Firestore) {}
 
-  public studentsData$: Observable<Student[]>;
-  private studentsData = new BehaviorSubject<Student[]>([]);
-
-  constructor() {
-    this.studentsData$ = this.studentsData.asObservable();
-    this.studentsData.next([
-         new Student(1, 'Lionel', 'Messi', 'lmessi@gmail.com', true),
-         new Student(2, 'Angel', 'Di Maria', 'adimaria@gmail.com', true)
-        ]);
+  // Get all students
+  getStudents(): Observable<Student[]>{
+    const placeRef = collection(this.firestore, 'students');
+    return collectionData(placeRef, { idField: 'id' }) as Observable<Student[]>;
   }
 
-  add(item: Student) {
-    let studentsAux = this.studentsData.getValue();
-    item.id = studentsAux.length > 0 ? (studentsAux[studentsAux.length - 1].id + 1) : 1;
-    studentsAux.push(item);
-    this.studentsData.next(studentsAux.sort(s => s.id));
+  // Get student by id
+  getStudentById(id: string) {
+    const placeDocRef = doc(this.firestore, `students/${id}`);
+    return docData(placeDocRef, { idField: 'id' }) as Observable<Student>;
   }
 
-  update(item: Student, id: number) {
-    let studentsAux = this.studentsData.getValue().filter(p => p.id !== id);
-    item.id = id;
-    studentsAux.push(item);
-    this.studentsData.next(studentsAux);
+  // Save new student
+  saveStudent(student: Student) {
+    const placeRef = collection(this.firestore, 'students');
+    return addDoc(placeRef, student);
   }
 
-  delete(id: number) {
-    let studentsAux = this.studentsData.getValue().filter(p => p.id !== id);
-    this.studentsData.next(studentsAux);
+  // Update existing student
+  updateStudent(student: Student, id: string) {
+    const placeDocRef = doc(this.firestore, `students/${id}`);
+    return updateDoc(placeDocRef, {...student});
+  }
+
+  // Delete existing user
+  deleteStudentsById(id: string) {
+    const placeDocRef = doc(this.firestore, `students/${id}`);
+    return deleteDoc(placeDocRef);
   }
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { InscriptionsComponent } from './inscriptions.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { InscriptionDialogComponent } from './inscription-dialog/inscription-dialog.component';
+import { InscriptionsRoutingModule } from './inscriptions-routing.module';
 
 
 
@@ -13,7 +14,8 @@ import { InscriptionDialogComponent } from './inscription-dialog/inscription-dia
   ],
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    InscriptionsRoutingModule
   ]
 })
 export class InscriptionsModule { }

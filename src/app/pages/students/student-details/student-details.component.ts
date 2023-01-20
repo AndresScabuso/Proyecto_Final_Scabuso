@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable, of } from 'rxjs';
+import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { Inscription } from 'src/app/models/Inscription';
 import { Student } from 'src/app/models/student';
 import { InscriptionsService } from 'src/app/services/inscriptions/inscriptions.service';
@@ -12,25 +13,34 @@ import { InscriptionsService } from 'src/app/services/inscriptions/inscriptions.
 })
 export class StudentDetailsComponent implements OnInit {
 
-  public inscriptions$: Observable<Inscription[]>;
+  public inscriptions: Inscription[];
 
   // Columnas que se van a mostrar en la tabla
-  displayedColumns = ['id', 'course', 'isActive', 'delete'];
+  displayedColumns = ['course', 'isActive'];
 
-  studentId: number;
+  studentId: string;
 
-  constructor(public service: InscriptionsService, private readonly dialogRef: MatDialogRef<StudentDetailsComponent>, @Inject(MAT_DIALOG_DATA) public data: Student) {
+  constructor(private service: InscriptionsService, private authService: AuthService, private readonly dialogRef: MatDialogRef<StudentDetailsComponent>, @Inject(MAT_DIALOG_DATA) public data: Student) {
     this.studentId = data.id;
+    if(this.isAdmin()){
+      this.displayedColumns.push('delete');
+    }
   }
 
   ngOnInit(): void {
-    this.inscriptions$ = of(this.service.getByStudentId(this.studentId));
+    this.service.getInscriptionByStudentId(this.studentId).subscribe((inscriptions) => {
+      console.log(inscriptions)
+      this.inscriptions = inscriptions;
+    });
   }
 
   // Elimina un inscripcion
   removeInscription(inscription: Inscription) {
-    this.service.delete(inscription.id);
-    this.inscriptions$ = of(this.service.getByStudentId(this.studentId));
+    this.service.deleteInscriptionsById(inscription.id);
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
 }

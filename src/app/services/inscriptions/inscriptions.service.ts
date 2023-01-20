@@ -1,56 +1,70 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, updateDoc } from '@angular/fire/firestore';
 import { Inscription } from 'src/app/models/Inscription';
-import { ICrudService } from '../interfaces/ICrudService';
+import { query, where } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
-export class InscriptionsService implements ICrudService<Inscription>{
+export class InscriptionsService{
 
-  public inscriptionsData$: Observable<Inscription[]>;
-  private inscriptionsData = new BehaviorSubject<Inscription[]>([]);
+  constructor(private firestore: Firestore) {}
 
-  constructor() {
-    this.inscriptionsData$ = this.inscriptionsData.asObservable();
-    this.inscriptionsData.next([])
+  // Get all inscriptions
+  getInscriptions(): Observable<Inscription[]>{
+    const placeRef = collection(this.firestore, 'inscriptions');
+    return collectionData(placeRef, { idField: 'id' }) as Observable<Inscription[]>;
   }
 
-  add(item: Inscription): void {
-    let inscriptionsAux = this.inscriptionsData.getValue();
-    item.id = inscriptionsAux.length > 0 ? (inscriptionsAux[inscriptionsAux.length - 1].id + 1) : 1;
-    inscriptionsAux.push(item);
-    this.inscriptionsData.next(inscriptionsAux.sort(s => s.id));
+  // Get inscription by id
+  getInscriptionById(id: string) {
+    const placeDocRef = doc(this.firestore, `inscriptions/${id}`);
+    return docData(placeDocRef, { idField: 'id' }) as Observable<Inscription>;
   }
 
-  update(item: Inscription, id: number): void {
-    let inscriptionsAux = this.inscriptionsData.getValue().filter(p => p.id != id);
-    item.id = id;
-    inscriptionsAux.push(item);
-    this.inscriptionsData.next(inscriptionsAux);
+  // Get inscription by Course id
+  getInscriptionByCourseId(id: string): Observable<Inscription[]> {
+    const placeRef = collection(this.firestore, `inscriptions`);
+    const q = query(placeRef, where("course", "==", id));
+
+    return collectionData(q, { idField: 'Id' }) as Observable<Inscription[]>;
   }
 
-  delete(id: number): void {
-    let inscriptionsAux = this.inscriptionsData.getValue().filter(p => p.id != id);
-    this.inscriptionsData.next(inscriptionsAux);  
+  // Get inscription by Student id
+  getInscriptionByStudentId(id: string): Observable<Inscription[]> {
+    const placeRef = collection(this.firestore, `inscriptions`);
+    const q = query(placeRef, where("student", "==", id));
+
+    return collectionData(q, { idField: 'studentId' }) as Observable<Inscription[]>;
   }
 
-  getByStudentId(id: number): Inscription[] {
-    return this.inscriptionsData.getValue().filter(p => p.student.id == id); 
+  // Save new inscription
+  saveInscription(inscription: Inscription) {
+    const placeRef = collection(this.firestore, 'inscriptions');
+    return addDoc(placeRef, inscription);
   }
 
-  getByCourseId(id: number): Inscription[] {
-    return this.inscriptionsData.getValue().filter(p => p.course.id == id);
+  // Update existing inscription
+  updateInscription(inscription: Inscription, id: string) {
+    const placeDocRef = doc(this.firestore, `inscriptions/${id}`);
+    return updateDoc(placeDocRef, {...inscription});
   }
 
-  checkExists(id: number, studentId: number, courseId: number, newItem: boolean): boolean {
-    let inscriptionsAux = this.inscriptionsData.getValue();
-    if(newItem)
-      inscriptionsAux = inscriptionsAux.filter(p => p.student.id == studentId && p.course.id == courseId);
-    else
-      inscriptionsAux = inscriptionsAux.filter(p => p.student.id == studentId && p.course.id == courseId && p.id != id);
-    console.log(inscriptionsAux)
-    return inscriptionsAux.length > 0;
+  // Delete existing user
+  deleteInscriptionsById(id: string) {
+    const placeDocRef = doc(this.firestore, `inscriptions/${id}`);
+    return deleteDoc(placeDocRef);
   }
+
+  // checkExists(id: number, studentId: string, inscriptionId: string, newItem: boolean): boolean {
+  //   let inscriptionsAux = this.inscriptionsData.getValue();
+  //   if(newItem)
+  //     inscriptionsAux = inscriptionsAux.filter(p => p.student.id == studentId && p.inscription.id == inscriptionId);
+  //   else
+  //     inscriptionsAux = inscriptionsAux.filter(p => p.student.id == studentId && p.inscription.id == inscriptionId && p.id != id);
+  //   console.log(inscriptionsAux)
+  //   return inscriptionsAux.length > 0;
+  // }
 
 }

@@ -14,8 +14,8 @@ import { StudentService } from 'src/app/services/student/student.service';
 })
 export class InscriptionDialogComponent implements OnInit {
 
-  students$: Observable<Student[]>;
-  courses$: Observable<Course[]>;
+  students: Student[];
+  courses: Course[];
 
   studentControl = new FormControl<Student | null>(null, Validators.required)
   courseControl = new FormControl<Course | null>(null, Validators.required)
@@ -31,8 +31,13 @@ export class InscriptionDialogComponent implements OnInit {
     if (data) {
       this.inscriptionForm.patchValue(data);
     }
-    this.students$ = stuService.studentsData$;
-    this.courses$ = couService.coursesData$;
+    stuService.getStudents().subscribe((students) => {
+      this.students = students;
+    });
+
+    couService.getCourses().subscribe((courses) => {
+      this.courses = courses;
+    })
   }
 
   // Cierra el Dialog

@@ -1,39 +1,42 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, updateDoc } from '@angular/fire/firestore';
 import { Course } from 'src/app/models/course';
-import { ICrudService } from '../interfaces/ICrudService';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CoursesService implements ICrudService<Course>{
+export class CoursesService{
 
-  public coursesData$: Observable<Course[]>;
-  private coursesData = new BehaviorSubject<Course[]>([]);
+  constructor(private firestore: Firestore) {}
 
-  constructor() {
-    this.coursesData$ = this.coursesData.asObservable();
-    this.coursesData.next([
-      new Course(1, 'Programacion I', 'Html, CSS, Javascript', true),
-      new Course(2, 'Base de Datos I', 'Fundamentos de base de datos', true)
-    ]);
+  // Get all courses
+  getCourses(): Observable<Course[]>{
+    const placeRef = collection(this.firestore, 'courses');
+    return collectionData(placeRef, { idField: 'id' }) as Observable<Course[]>;
   }
 
-  add(item: Course): void {
-    let coursesAux = this.coursesData.getValue();
-    item.id = coursesAux.length > 0 ? (coursesAux[coursesAux.length - 1].id + 1) : 1;
-    coursesAux.push(item);
-    this.coursesData.next(coursesAux.sort(s => s.id));
+  // Get course by id
+  getCourseById(id: string) {
+    const placeDocRef = doc(this.firestore, `courses/${id}`);
+    return docData(placeDocRef, { idField: 'id' }) as Observable<Course>;
   }
 
-  update(item: Course, id: number) {
-    let coursesAux = this.coursesData.getValue().filter(p => p.id !== id);
-    item.id = id;
-    coursesAux.push(item);
-    this.coursesData.next(coursesAux);
+  // Save new course
+  saveCourse(course: Course) {
+    const placeRef = collection(this.firestore, 'courses');
+    return addDoc(placeRef, course);
   }
-  delete(id: number): void {
-    let coursesAux = this.coursesData.getValue().filter(p => p.id !== id);
-    this.coursesData.next(coursesAux);
+
+  // Update existing course
+  updateCourse(course: Course, id: string) {
+    const placeDocRef = doc(this.firestore, `courses/${id}`);
+    return updateDoc(placeDocRef, {...course});
+  }
+
+  // Delete existing user
+  deleteCoursesById(id: string) {
+    const placeDocRef = doc(this.firestore, `courses/${id}`);
+    return deleteDoc(placeDocRef);
   }
 }

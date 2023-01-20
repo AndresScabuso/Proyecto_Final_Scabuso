@@ -4,7 +4,7 @@
         <div class="col-auto"><button type="button" class="btn btn-primary" (click)="addStudent()"> Nuevo</button></div>
     </div>
     <br><br>
-    <table mat-table [dataSource]="students$" class="mat-elevation-z8">
+    <table mat-table [dataSource]="students" class="mat-elevation-z8">
 
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef> No. </th>
@@ -40,7 +40,7 @@
             <td mat-cell *matCellDef="let element"><mat-icon [ngClass]="element.isActive ? 'green' : 'red'">circle</mat-icon></td>
         </ng-container>
 
-        <ng-container matColumnDef="edit">
+        <ng-container *ngIf="isAdmin()" matColumnDef="edit">
             <th mat-header-cell *matHeaderCellDef> Editar </th>
             <td mat-cell *matCellDef="let element">
                 <button (click)="editStudent(element)" mat-icon-button color="primary">
@@ -49,7 +49,7 @@
             </td>
         </ng-container>
 
-        <ng-container matColumnDef="delete">
+        <ng-container *ngIf="isAdmin()" matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef> Eliminar </th>
             <td mat-cell *matCellDef="let element">
                 <button (click)="removeStudent(element)" mat-icon-button color="warn">

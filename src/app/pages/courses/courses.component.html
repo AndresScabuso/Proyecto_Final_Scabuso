@@ -4,7 +4,7 @@
         <div class="col-auto"><button type="button" class="btn btn-primary" (click)="addCourse()"> Nuevo</button></div>
       </div>
     <br><br>
-    <table mat-table [dataSource]="courses$" class="mat-elevation-z8">
+    <table mat-table [dataSource]="courses" class="mat-elevation-z8">
 
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef> No. </th>

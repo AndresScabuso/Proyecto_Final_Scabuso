@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Usuario</h1>
+<div mat-dialog-content>
+    <form class="flex flex-column" [formGroup]="usersForm">
+        <mat-form-field appearance="outline" style="margin-top: 20px;">
+            <mat-label>E-Mail</mat-label>
+            <input readonly="true" [formControl]="emailControl" matInput placeholder="Usuario">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" [formControl]="passwordControl" matInput placeholder="Contraseña">
+            <mat-error *ngIf="usersForm.get('password')?.errors?.['required']">El campo Contraseña es requerido</mat-error>
+            <mat-error *ngIf="usersForm.get('password')?.errors?.['minlength']">El campo Contraseña debe tener al menos 6 caracteres</mat-error>    
+        </mat-form-field>
+    </form>
+    <div mat-dialog-action style="margin-top: 50px;">
+        <button type="button" class="btn btn-light" (click)="close()">Cancelar</button> &nbsp;
+        <button type="button" class="btn btn-primary" [mat-dialog-close]="usersForm.value" [ngClass]="userValid() ? 'btn btn-primary' : 'btn btn-primary disabled'">Grabar</button>
+    </div>
+</div>

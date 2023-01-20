@@ -17,6 +17,8 @@ import { ActivoPipe } from './pipes/activo.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NotImageDirective } from './directives/not-image.directive';
 import { CabeceraDirective } from './directives/cabecera.directive';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { CabeceraDirective } from './directives/cabecera.directive';
     NotImageDirective,
     CabeceraDirective,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatDividerModule,
+    MatProgressBarModule
   ]
 })
 export class SharedModule { }

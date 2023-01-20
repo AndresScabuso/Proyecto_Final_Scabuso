@@ -27,16 +27,11 @@
 
     <mat-card-title>Inscripciones del alumno</mat-card-title>
 
-    <table mat-table [dataSource]="inscriptions$" class="mat-elevation-z8">
-
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef> No. </th>
-        <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
-      </ng-container>
+    <table mat-table [dataSource]="inscriptions" class="mat-elevation-z8">
   
       <ng-container matColumnDef="course">
         <th mat-header-cell *matHeaderCellDef> Curso </th>
-        <td mat-cell *matCellDef="let element"> {{ element.course.name }} </td>
+        <td mat-cell *matCellDef="let element"> {{ element.course }} </td>
       </ng-container>
   
       <ng-container matColumnDef="isActive">

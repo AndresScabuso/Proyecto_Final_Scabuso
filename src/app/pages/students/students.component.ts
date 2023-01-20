@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { Student } from 'src/app/models/student';
 import { StudentService } from 'src/app/services/student/student.service';
 import { StudentDetailsComponent } from './student-details/student-details.component';
@@ -13,44 +14,55 @@ import { StudentDialogComponent } from './student-dialog/student-dialog.componen
   styleUrls: ['./students.component.scss']
 })
 export class StudentsComponent implements OnInit {
-  // Estudiantes
-  public students$: Observable<Student[]>;
+  // Alumnos
+  public students: Student[];
 
   // Columnas que se van a mostrar en la tabla
-  displayedColumns = ['id', 'details', 'firstName', 'lastName', 'email', 'isActive', 'edit', 'delete'];
+  displayedColumns = ['id', 'details', 'firstName', 'lastName', 'email', 'isActive'];
 
-  constructor(private readonly dialogService: MatDialog, public service: StudentService) { }
-
-  ngOnInit(): void {
-    this.students$ = this.service.studentsData$;
+  constructor(private readonly dialogService: MatDialog, private service: StudentService, private authService: AuthService) { 
+    if(this.isAdmin()) {
+      this.displayedColumns.push('edit');
+      this.displayedColumns.push('delete');
+    }
   }
 
-  // Agrega un estudiante
+  ngOnInit(): void {
+    this.service.getStudents().subscribe((students) => {
+      this.students = students;
+    });  
+  }
+
+  // Agrega un alumno
   addStudent() {
     const dialog = this.dialogService.open(StudentDialogComponent, { width: '60%' });
     dialog.afterClosed().subscribe((value) => {
       if (value) {
-        this.service.add(value);
+        this.service.saveStudent(value);
       }
     })
   }
-
-  // Modifica un estudiante
+  
+  // Modifica un alumno
   editStudent(student: Student) {
     const dialog = this.dialogService.open(StudentDialogComponent, { data: student, width: '60%' });
     dialog.afterClosed().subscribe((value) => {
       if (value) {
-        this.service.update(value, student.id);
+        this.service.updateStudent(value, student.id);
       }
     })
   }
 
-  // Elimina un estudiante
+  // Elimina un alumno
   removeStudent(student: Student) {
-    this.service.delete(student.id);
+    this.service.deleteStudentsById(student.id);
   }
 
   details(student: Student) {
     this.dialogService.open(StudentDetailsComponent, { data: student });
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 }

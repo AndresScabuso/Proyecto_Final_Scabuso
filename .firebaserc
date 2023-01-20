@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "proyectofinalscabuso": {
+      "hosting": {
+        "Proyecto_Final_Scabuso": [
+          "proyectofinalscabuso"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "proyectofinalscabuso"
+  }
+}

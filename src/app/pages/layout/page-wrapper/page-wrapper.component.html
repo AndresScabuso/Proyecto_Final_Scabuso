@@ -1,0 +1,12 @@
+<mat-sidenav-container >
+    <mat-sidenav mode="side" opened>
+        <!-- <a class="item" routerLink="home">Inicio</a> -->
+        <a class="item" routerLink="students">Alumnos</a>
+        <a class="item" routerLink="courses">Cursos</a>
+        <a class="item" routerLink="inscriptions">Inscripciones</a>
+        <a *ngIf="checkIsAdmin()" class="item" routerLink="users">Usuarios</a>
+    </mat-sidenav>
+    <mat-sidenav-content>        
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>

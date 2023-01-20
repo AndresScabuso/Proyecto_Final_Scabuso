@@ -1,0 +1,31 @@
+<div class="main_div">
+    <mat-card class="card_global">
+        <mat-card-header class="card_header">
+        <mat-card-title>Ingreso</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card_content">
+            <form class="flex flex-column" [formGroup]="loginForm">
+                <mat-form-field appearance="outline" style="margin-top: 20px;">
+                    <mat-label>E-Mail</mat-label>
+                    <input [formControl]="emailControl" matInput placeholder="E-Mail"> 
+                    <mat-error *ngIf="loginForm.get('email')?.errors?.['required']">El campo E-Mail es requerido</mat-error>
+                    <mat-error *ngIf="loginForm.get('email')?.errors?.['email']">Formato incorrecto</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="margin-top: 20px;">
+                    <mat-label>Contraseña</mat-label>
+                    <input type="password" [formControl]="passwordControl" matInput placeholder="Contraseña">
+                    <mat-error *ngIf="loginForm.get('password')?.errors?.['required']">El campo Contraseña es requerido</mat-error>
+                    <mat-error *ngIf="loginForm.get('password')?.errors?.['minlength']">El campo Contraseña debe tener al menos 6 caracteres</mat-error>
+                </mat-form-field>       
+            </form>
+        </mat-card-content>
+        <mat-card-actions class="card_actions">
+        <button type="button" mat-button color="basic" (click)="register()">Registarse</button>
+        &nbsp;
+        <button type="submit" mat-raised-button color="primary" (click)="login()">Ingresar</button>
+        </mat-card-actions>
+        <mat-card-footer>
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-card-footer>
+    </mat-card>
+</div>

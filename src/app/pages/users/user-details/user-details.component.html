@@ -1,0 +1,16 @@
+<mat-card style="width: 800px; margin: 20px;">
+  <mat-card-header>
+    <mat-card-title appCabecera>Datos de {{ data!.email }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content style="padding: 30px;">
+    <div class="row" style="margin-top: 20px">
+      <div class="col-md-6"><b>ID</b></div>
+      <div class="col-md-6">{{ data.id }}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"><b>E-mail</b></div>
+      <div class="col-md-6">{{ data.email }}</div>
+    </div>
+    <br>
+  </mat-card-content>
+</mat-card>

@@ -10,13 +10,18 @@ import { CoreModule } from './core/core.module';
 import { StudentsModule } from './pages/students/students.module';
 import { CoursesModule } from './pages/courses/courses.module';
 import { InscriptionsModule } from './pages/inscriptions/inscriptions.module';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 
 
 @NgModule({
     declarations: [
         AppComponent
     ],
-    providers: [],
+    providers: [{ provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig }],
     bootstrap: [AppComponent],
     imports: [
         BrowserModule,
@@ -28,7 +33,10 @@ import { InscriptionsModule } from './pages/inscriptions/inscriptions.module';
         CoreModule,
         StudentsModule,
         CoursesModule,
-        InscriptionsModule
+        InscriptionsModule,
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideAuth(() => getAuth()),
+        provideFirestore(() => getFirestore())
     ]
 })
 export class AppModule { }
