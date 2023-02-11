@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
-import { User } from 'src/app/core/models/user.interface';
 import { UsersService } from 'src/app/services/users/users.service';
 
 @Component({
@@ -11,13 +10,14 @@ import { UsersService } from 'src/app/services/users/users.service';
 })
 export class ToolbarComponent {
 
-  constructor(private userService: UsersService, private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   getCurrentUser() {
-    return this.authService.loggerUser().email;
+    return this.authService.loggedUser().email;
   }
 
   logout() {
     this.authService.logout();
+    localStorage.removeItem('loggedUser');
   }
 }

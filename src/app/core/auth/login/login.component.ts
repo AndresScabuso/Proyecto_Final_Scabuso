@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
@@ -26,11 +27,7 @@ export class LoginComponent {
       password: this.loginForm.get('password')?.value!
     };
 
-    this.authService.login(user.email, user.password)
-      .then(response => {
-        this.router.navigate(["pages","students"]);
-      })
-      .catch(error => alert(error))
+    this.authService.login(user.email, user.password);
   }
 
   register() {

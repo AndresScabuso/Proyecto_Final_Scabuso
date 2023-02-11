@@ -16,27 +16,31 @@ export class StudentDetailsComponent implements OnInit {
   public inscriptions: Inscription[];
 
   // Columnas que se van a mostrar en la tabla
-  displayedColumns = ['course', 'isActive'];
+  displayedColumns = ['course', 'isActive','delete'];
 
-  studentId: string;
+  studentId: number;
 
   constructor(private service: InscriptionsService, private authService: AuthService, private readonly dialogRef: MatDialogRef<StudentDetailsComponent>, @Inject(MAT_DIALOG_DATA) public data: Student) {
     this.studentId = data.id;
-    if(this.isAdmin()){
-      this.displayedColumns.push('delete');
-    }
   }
 
   ngOnInit(): void {
+    this.getAll();
+  }
+
+  getAll() {
     this.service.getInscriptionByStudentId(this.studentId).subscribe((inscriptions) => {
-      console.log(inscriptions)
       this.inscriptions = inscriptions;
     });
   }
 
   // Elimina un inscripcion
   removeInscription(inscription: Inscription) {
-    this.service.deleteInscriptionsById(inscription.id);
+    this.service.deleteInscriptionsById(inscription.id).subscribe({
+      next: () => {
+        this.getAll();
+      }
+    });
   }
 
   isAdmin(): boolean {

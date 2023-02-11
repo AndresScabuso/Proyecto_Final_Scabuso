@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { isDevMode, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,18 +10,17 @@ import { CoreModule } from './core/core.module';
 import { StudentsModule } from './pages/students/students.module';
 import { CoursesModule } from './pages/courses/courses.module';
 import { InscriptionsModule } from './pages/inscriptions/inscriptions.module';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
-import { environment } from '../environments/environment';
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
-import { FIREBASE_OPTIONS } from '@angular/fire/compat';
-
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StudentsStoreModule } from './pages/students/students-store.module';
+import { CoursesStoreModule } from './pages/courses/courses-store.module';
 
 @NgModule({
     declarations: [
         AppComponent
     ],
-    providers: [{ provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig }],
+    providers: [],
     bootstrap: [AppComponent],
     imports: [
         BrowserModule,
@@ -34,9 +33,11 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
         StudentsModule,
         CoursesModule,
         InscriptionsModule,
-        provideFirebaseApp(() => initializeApp(environment.firebase)),
-        provideAuth(() => getAuth()),
-        provideFirestore(() => getFirestore())
+        StoreModule.forRoot({}, {}),
+        EffectsModule.forRoot([]),
+        StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+        CoursesStoreModule,
+        StudentsStoreModule
     ]
 })
 export class AppModule { }

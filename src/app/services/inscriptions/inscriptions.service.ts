@@ -1,60 +1,54 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, updateDoc } from '@angular/fire/firestore';
+import { map, Observable } from 'rxjs';
 import { Inscription } from 'src/app/models/Inscription';
-import { query, where } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InscriptionsService{
 
-  constructor(private firestore: Firestore) {}
+  private baseUrl = 'https://63e6fa769f914b4689d20937.mockapi.io/api/scabuso';
+
+  constructor(private http: HttpClient) {}
 
   // Get all inscriptions
   getInscriptions(): Observable<Inscription[]>{
-    const placeRef = collection(this.firestore, 'inscriptions');
-    return collectionData(placeRef, { idField: 'id' }) as Observable<Inscription[]>;
+    return this.http.get<Inscription[]>(this.baseUrl + 'inscriptions');
   }
 
   // Get inscription by id
   getInscriptionById(id: string) {
-    const placeDocRef = doc(this.firestore, `inscriptions/${id}`);
-    return docData(placeDocRef, { idField: 'id' }) as Observable<Inscription>;
+    return this.http.get<Inscription>(this.baseUrl + '/inscriptions/:' + id);
   }
 
   // Get inscription by Course id
   getInscriptionByCourseId(id: string): Observable<Inscription[]> {
-    const placeRef = collection(this.firestore, `inscriptions`);
-    const q = query(placeRef, where("course", "==", id));
-
-    return collectionData(q, { idField: 'Id' }) as Observable<Inscription[]>;
+    return this.http.get<Inscription[]>(this.baseUrl + 'inscriptions')
+    .pipe(map((value : Inscription[]) => 
+      value.filter(e => e.course.id == id)));
   }
 
   // Get inscription by Student id
-  getInscriptionByStudentId(id: string): Observable<Inscription[]> {
-    const placeRef = collection(this.firestore, `inscriptions`);
-    const q = query(placeRef, where("student", "==", id));
-
-    return collectionData(q, { idField: 'studentId' }) as Observable<Inscription[]>;
+  getInscriptionByStudentId(id: number): Observable<Inscription[]> {
+    return this.http.get<Inscription[]>(this.baseUrl + 'inscriptions')
+      .pipe(map((value : Inscription[]) => 
+        value.filter(e => e.student.id == id)));
   }
 
   // Save new inscription
   saveInscription(inscription: Inscription) {
-    const placeRef = collection(this.firestore, 'inscriptions');
-    return addDoc(placeRef, inscription);
+    return this.http.post<Inscription>(this.baseUrl + '/inscriptions/', inscription);
   }
 
   // Update existing inscription
-  updateInscription(inscription: Inscription, id: string) {
-    const placeDocRef = doc(this.firestore, `inscriptions/${id}`);
-    return updateDoc(placeDocRef, {...inscription});
+  updateInscription(inscription: Inscription, id: number) {
+    return this.http.put<Inscription>(this.baseUrl + '/inscriptions/' + id, inscription);
   }
 
-  // Delete existing user
-  deleteInscriptionsById(id: string) {
-    const placeDocRef = doc(this.firestore, `inscriptions/${id}`);
-    return deleteDoc(placeDocRef);
+  // Delete existing inscription
+  deleteInscriptionsById(id: number) {
+    return this.http.delete<Inscription>(this.baseUrl + '/inscriptions/' + id);
   }
 
   // checkExists(id: number, studentId: string, inscriptionId: string, newItem: boolean): boolean {

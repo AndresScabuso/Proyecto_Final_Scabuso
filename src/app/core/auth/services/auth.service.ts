@@ -2,62 +2,53 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsersService } from 'src/app/services/users/users.service';
 import { User } from '../../models/user.interface';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, authState } from '@angular/fire/auth'
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Observable } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private authfirebase: AngularFireAuth, private readonly auth: Auth, private readonly userService: UsersService, private router: Router) { 
-    this.authfirebase.authState.subscribe((user) => {
-      if(user) {
-        localStorage.setItem('authUser', JSON.stringify(user));
-        /* Busco el usuario de la tabla users relacionado al usuario autenticado */
-        this.userService.getUserById(user.uid).subscribe((user) => {
-          localStorage.setItem('user', JSON.stringify(user));
-        })
-      } else {
-        localStorage.setItem('authUser', 'null');
-      }
-    })
-   }
+  _loggedUser: User | null;
+  _errorMessage: string;
+
+  constructor(private readonly userService: UsersService, private router: Router, private snackBar: MatSnackBar) {
+    this._loggedUser = JSON.parse(localStorage.getItem('loggeduser')!);
+  }
 
   register(email: string, password: string) {
-    return createUserWithEmailAndPassword(this.auth, email, password);
+     const newUser: User = { id: 0, email: email, password: password, role: 'user' };
+     return this.userService.saveUser(newUser);
   }
 
   login(email: string, password: string) {
-    return signInWithEmailAndPassword(this.auth, email, password).then((result) => {
-      this.authfirebase.authState.subscribe((user) => {
-        if(user){
-          this.router.navigate(['pages','students'])
-        }
-      })
-      return result;
-    });
+    this.userService.getUserByUsernamePassword(email, password).subscribe(value => {
+      if(value) {
+        localStorage.setItem('loggeduser', JSON.stringify(value));
+        this.router.navigate(['pages', 'students']);
+        this.snackBar.open('Bienvenido ' + value.email + '.', 'Done');
+      }
+      else 
+        this.snackBar.open('Usuario y/o contraseña incorrecto(s).', 'Done');
+    })  
   }
 
   logout() {
-    this.auth.signOut();
-    localStorage.removeItem('authUser');
-    localStorage.removeItem('user');
+    localStorage.removeItem('loggeduser');
     this.router.navigate(['auth']);
+    this.snackBar.open('¡Vuelve pronto ' + this._loggedUser?.email + '!', 'Done');
   }
 
   isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('authUser')!);
-    return user !== null;
+    return this._loggedUser !== null;
   }
 
   isAdmin(): boolean {
-    const user = JSON.parse(localStorage.getItem('user')!);
-    return user.role == 'admin';
+    return this._loggedUser?.role == 'admin';
   }
 
-  loggerUser(): User {
-    const user = JSON.parse(localStorage.getItem('user')!);
-    return user;
+  loggedUser(): User {
+    return this._loggedUser!;
   }
 }

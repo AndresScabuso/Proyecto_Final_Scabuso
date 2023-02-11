@@ -1,41 +1,39 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, updateDoc } from '@angular/fire/firestore';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Student } from 'src/app/models/student';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
-  constructor(private firestore: Firestore) {}
+
+  private baseUrl = 'https://63c5fccae1292e5bea2ddaae.mockapi.io/api/scabuso';
+
+  constructor(private http: HttpClient) {}
 
   // Get all students
   getStudents(): Observable<Student[]>{
-    const placeRef = collection(this.firestore, 'students');
-    return collectionData(placeRef, { idField: 'id' }) as Observable<Student[]>;
+    return this.http.get<Student[]>(this.baseUrl + 'students');
   }
 
   // Get student by id
-  getStudentById(id: string) {
-    const placeDocRef = doc(this.firestore, `students/${id}`);
-    return docData(placeDocRef, { idField: 'id' }) as Observable<Student>;
+  getStudentById(id: string) : Observable<Student> {
+    return this.http.get<Student>(this.baseUrl + '/students/:' + id);
   }
 
   // Save new student
-  saveStudent(student: Student) {
-    const placeRef = collection(this.firestore, 'students');
-    return addDoc(placeRef, student);
+  saveStudent(student: Student) : Observable<Student> {
+    return this.http.post<Student>(this.baseUrl + '/students', student);
   }
 
   // Update existing student
-  updateStudent(student: Student, id: string) {
-    const placeDocRef = doc(this.firestore, `students/${id}`);
-    return updateDoc(placeDocRef, {...student});
+  updateStudent(student: Student, id: number) : Observable<Student> {
+    return this.http.put<Student>(this.baseUrl + '/students/' + id, student);
   }
 
   // Delete existing user
-  deleteStudentsById(id: string) {
-    const placeDocRef = doc(this.firestore, `students/${id}`);
-    return deleteDoc(placeDocRef);
+  deleteStudentsById(id: number) {
+    return this.http.delete<Student>(this.baseUrl + '/students/' + id);
   }
 }

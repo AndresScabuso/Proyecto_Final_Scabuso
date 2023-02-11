@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <div appCabecera class="col-auto mr-auto">Lista de cursos</div>
+        <div appCabecera class="col-auto mr-auto">Lista de cursos <small>(con redux)</small></div>
         <div class="col-auto"><button type="button" class="btn btn-primary" (click)="addCourse()"> Nuevo</button></div>
       </div>
     <br><br>
@@ -56,5 +56,6 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    
+    <mat-spinner *ngIf="loading$ === true" style="margin:0 auto;"></mat-spinner>
+
 </div>

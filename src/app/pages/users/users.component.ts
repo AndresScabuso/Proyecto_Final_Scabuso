@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { User } from 'src/app/core/models/user.interface';
@@ -19,7 +20,7 @@ public users: User[];
 // Columnas que se van a mostrar en la tabla
 displayedColumns = ['id', 'details', 'email'];
 
-constructor(private readonly dialogService: MatDialog, private service: UsersService, private authService: AuthService) {
+constructor(private readonly dialogService: MatDialog, private service: UsersService, private authService: AuthService, private snackBar: MatSnackBar) {
   if(this.isAdmin()) {
     this.displayedColumns.push('edit');
     this.displayedColumns.push('delete');
@@ -27,6 +28,10 @@ constructor(private readonly dialogService: MatDialog, private service: UsersSer
 }
 
 ngOnInit(): void {
+  this.getAll();
+}
+
+getAll() {
   this.service.getUsers().subscribe((users) => {
     this.users = users;
   });
@@ -37,14 +42,24 @@ editUser(user: User) {
   const dialog = this.dialogService.open(UserDialogComponent, { data: user, width: '60%' });
   dialog.afterClosed().subscribe((value) => {
     if (value) {
-      this.service.updateUser(value, user.id);
+      this.service.updateUser(value, user.id).subscribe({
+        next: () => {
+          this.getAll();
+          this.snackBar.open('Usuario modificado con éxito.', 'Done');
+        }
+      });
     }
   })
 }
 
 // Elimina un usuario
 removeUser(user: User) {
-  this.service.deleteUserById(user.id);
+  this.service.deleteUserById(user.id).subscribe({
+    next: () => {
+      this.getAll();
+      this.snackBar.open('Usuario eliminado con éxito.', 'Done');
+    }
+  });
 }
 
 details(user: User) {

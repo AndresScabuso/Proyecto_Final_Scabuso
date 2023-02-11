@@ -1,43 +1,46 @@
 import { Injectable } from '@angular/core';
 import { User } from 'src/app/core/models/user.interface';
-import { Firestore, collection, collectionData, updateDoc, docData } from '@angular/fire/firestore'
-import { Observable } from 'rxjs';
-import { addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { map, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
 
-  constructor(private firestore: Firestore) {}
+  private baseUrl = 'https://63c5fccae1292e5bea2ddaae.mockapi.io/api/scabuso/';
+
+  constructor(private http: HttpClient) {}
 
   // Get all users
-  getUsers(): Observable<User[]>{
-    const placeRef = collection(this.firestore, 'users');
-    return collectionData(placeRef, { idField: 'id' }) as Observable<User[]>;
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl + 'users');
   }
 
   // Get user by id
-  getUserById(id: string) {
-    const placeDocRef = doc(this.firestore, `users/${id}`);
-    return docData(placeDocRef, { idField: 'id' }) as Observable<User>;
+  getUserById(id: number): Observable<User> {
+    return this.http.get<User>(this.baseUrl + 'users/:' + id);
+  }
+
+  // Get user by id and pass
+  getUserByUsernamePassword(email: string, password: string ): Observable<User> {
+    return this.http.get<User[]>(this.baseUrl + 'users')
+      .pipe(map((value : User[]) => 
+        value.filter(e => e.email == email && e.password == password)[0]));
   }
 
   // Save new user
   saveUser(user: User) {
-    const placeRef = collection(this.firestore, 'users');
-    return addDoc(placeRef, user);
+    return this.http.post<User>(this.baseUrl + 'users', user);
   }
 
   // Update existing user
-  updateUser(user: User, id: string) {
-    const placeDocRef = doc(this.firestore, `users/${id}`);
-    return updateDoc(placeDocRef, {...user});
+  updateUser(user: User, id: number) {
+    return this.http.put<User>(this.baseUrl + 'users/' + id, user);
   }
 
   // Delete existing user
-  deleteUserById(id: string) {
-    const placeDocRef = doc(this.firestore, `users/${id}`);
-    return deleteDoc(placeDocRef);
+  deleteUserById(id: number) {
+    return this.http.delete<User>(this.baseUrl + 'users/' + id);
   }
 }

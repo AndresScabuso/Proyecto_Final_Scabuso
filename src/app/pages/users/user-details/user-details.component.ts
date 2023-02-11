@@ -14,7 +14,7 @@ import { InscriptionsService } from 'src/app/services/inscriptions/inscriptions.
 
 export class UserDetailsComponent implements OnInit {
 
-  userId: string;
+  userId: number;
 
   constructor(private readonly dialogRef: MatDialogRef<UserDetailsComponent>, @Inject(MAT_DIALOG_DATA) public data: User) {
     this.userId = data.id

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UsersService } from 'src/app/services/users/users.service';
 import { User } from '../../models/user.interface';
@@ -12,7 +13,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class RegisterComponent {
 
-  constructor(private readonly userService: UsersService, private readonly authService: AuthService, private readonly router: Router) {}
+  constructor(private readonly userService: UsersService, private readonly authService: AuthService, private readonly router: Router, private snackBar: MatSnackBar) {}
 
   emailControl = new FormControl("", [Validators.required, Validators.email]);
   passwordControl = new FormControl("", [Validators.required, Validators.minLength(6)]);
@@ -26,23 +27,12 @@ export class RegisterComponent {
     const email: string = this.registerForm.get('email')?.value!;
     const password: string = this.registerForm.get('password')?.value!;
 
-    const res = await this.authService.register(email, password)
-    .catch(error => {
-      console.log(error);
-    })
-
-    if(res) {
-      const id = res.user.uid;
-      const user: User = {
-          id: id,
-          email: email,
-          password: password,
-          role: 'user'
+    this.authService.register(email, password).subscribe(result => {
+      if(result) {
+        this.router.navigate(["auth","login"]);
+        this.snackBar.open('Usuario creado con éxito.', 'Done');
       }
-      this.userService.saveUser(user);
-      alert("Registro completo.")
-      this.router.navigate(["auth","login"]);
-    }
+    });
   }
 
   login() {

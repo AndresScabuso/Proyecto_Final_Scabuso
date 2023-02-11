@@ -26,13 +26,21 @@ export class CourseDetailsComponent implements OnInit {
   
   
   ngOnInit(): void {
-     this.service.getInscriptionByCourseId(this.courseId).subscribe((inscriptions) => {
+     this.getAll();
+  }
+
+  getAll() {
+    this.service.getInscriptionByCourseId(this.courseId).subscribe((inscriptions) => {
       this.inscriptions = inscriptions;
      })
   }
 
   // Elimina un inscripcion
   removeInscription(inscription: Inscription) {
-    this.service.deleteInscriptionsById(inscription.id);
+    this.service.deleteInscriptionsById(inscription.id).subscribe({
+      next: () => {
+        this.getAll();
+      }
+    });
   }
 }
